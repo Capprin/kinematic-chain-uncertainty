@@ -1,13 +1,13 @@
 % generates a cloud of approximate end positions when joint angles are uncertain
 
 % arm information
-links = 1;
-link_vectors = {[1 0 0]'};
-joint_axes = {'y'};
-joint_angles = {0};
+links = 3;
+link_vectors = {[1 0 0]' [1 0 0]' [1 0 0]'};
+joint_axes = {'y' 'y' 'y'};
+joint_angles = {-pi/8 -pi/8 -pi/8};
 % gaussian information
-joint_angle_sds = {pi/12};
-joint_length_sds = {1/10};
+joint_angle_sds = {pi/12 pi/12 pi/12};
+joint_length_sds = {1/12 1/12 1/12};
 num_samples = 10000;
 
 % create matrix to store angle, length deviations sampled from gaussian
@@ -23,12 +23,12 @@ end
 plot_prismatic_arm_distributions(4, deviation_mat);
 
 % get mean arm position, arm endpoint jacobian
-[J, link_ends, ~, ~, joint_axis_vectors_R] = link_jacobian(link_vectors, joint_angles, joint_axes, links);
+[J, link_ends, link_end_set, ~, joint_axis_vectors_R] = link_jacobian(link_vectors, joint_angles, joint_axes, links);
 
 % augment jacobian with unit link vectors
 J_aug = [J, zeros(size(J))];
 for j = 1:links
-    J_aug(:,links+j) = link_vectors{j}/norm(link_vectors{j});
+    J_aug(:,links+j) = link_end_set{j}/norm(link_vectors{j});
 end
 
 % use jacobian to deviate end position

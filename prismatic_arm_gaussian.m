@@ -1,13 +1,13 @@
 % generates a cloud of possible end positions when joint angles are uncertain
 
 % arm information
-links = 1;
-link_vectors = {[1 0 0]'};
-joint_axes = {'y'};
-joint_angles = {0};
+links = 3;
+link_vectors = {[1 0 0]' [1 0 0]' [1 0 0]'};
+joint_axes = {'y' 'y' 'y'};
+joint_angles = {-pi/8 -pi/8 -pi/8};
 % gaussian information
-joint_angle_sds = {pi/12};
-joint_length_sds = {1/10};
+joint_angle_sds = {pi/12 pi/12 pi/12};
+joint_length_sds = {1/12 1/12 1/12};
 num_samples = 10000;
 
 % create matrix to store angle, length deviations sampled from gaussian

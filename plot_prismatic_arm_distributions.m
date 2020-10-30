@@ -10,7 +10,7 @@ function f = plot_prismatic_arm_distributions(fignum, deviation_matrix)
         xlabel("Angle");
         
         subplot(2, links, i+links);
-        histogram(deviation_matrix(i, :));
+        histogram(deviation_matrix(i+links, :));
         title("Length frequency, Link " + num2str(i));
         xlabel("Length");
     end

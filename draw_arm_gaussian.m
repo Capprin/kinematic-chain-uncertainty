@@ -37,4 +37,5 @@ function [ax, end_scatter, arm_line, axes_lines] = draw_arm_gaussian(fignum, end
                      'linestyle', '--',...
                      'color', colors{j});                 
     end
+    hold off;
 end

@@ -3,15 +3,15 @@
 % arm information (expect 3 links)
 link_vectors = {[1 0 0]' [0.5 0 0]' [0.5 0 0]'};
 joint_axes = {'y', 'y', 'y'};
-joint_angles = {-pi/2 pi/4 0};
+joint_angles = {-pi/2 0 0};
 % gaussian information
-joint_angle_sds = {pi/24 pi/24 0};
-num_samples = 100;
+joint_angle_sds = {pi/12 pi/12 0};
+num_samples = 25;
 
 
 % generate cell array of nx1 vectors of normally-distributed joint angles
 % note: a wrapped normal may be better for this
-rng('default'); % repeatable seed
+rng(7,'twister'); % repeatable seed
 angles = cell(size(joint_angles));
 for j = 1:length(joint_angles)
     angles{j} = joint_angle_sds{j}.*randn(num_samples, 1) + joint_angles{j};

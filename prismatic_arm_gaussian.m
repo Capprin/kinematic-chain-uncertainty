@@ -1,14 +1,16 @@
 % generates a cloud of possible end positions when joint angles are uncertain
 
 % arm information
-links = 3;
-link_vectors = {[1 0 0]' [1 0 0]' [1 0 0]'};
-joint_axes = {'y' 'y' 'y'};
-joint_angles = {-pi/8 -pi/8 -pi/8};
+links = 2;
+link_vectors = {[1 0 0]' [1 0 0]'};
+joint_axes = {'y' 'z'};
+joint_angles = {-pi/2 0};
 % gaussian information
-joint_angle_sds = {pi/12 pi/12 pi/12};
-joint_length_sds = {1/12 1/12 1/12};
-num_samples = 10000;
+joint_angle_sds = {pi/12 pi/12};
+joint_length_sds = {1/12 1/12};
+num_samples = 1000;
+% output
+draw_end_as_vector = true;
 
 % create matrix to store angle, length deviations sampled from gaussian
 rng(7,'twister'); % repeatable seed
@@ -24,6 +26,7 @@ plot_prismatic_arm_distributions(2, deviation_mat);
 
 % compute endpoints of sampled configurations
 end_points = zeros(3, num_samples);
+end_vectors = zeros(3, num_samples);
 for i = 1:num_samples
     current_angles = cell(1,links);
     current_vectors = cell(1,links);
@@ -33,11 +36,14 @@ for i = 1:num_samples
     end
     current_end_points = robot_arm_endpoints(current_vectors, current_angles, joint_axes);
     end_points(:, i) = current_end_points(:,end);
+    
+    current_end_vector = current_end_points(:,end) - current_end_points(:,end-1);
+    end_vectors(:, i) = current_end_vector/norm(current_end_vector);
 end
 
 % compute arm geometry at mean joint angles
 [~, link_ends, ~, ~, joint_axis_vectors_R] = link_jacobian(link_vectors, joint_angles, joint_axes, j);
 
 % draw endpoints, arm, arm axes
-ax = draw_arm_gaussian(1, end_points, [66 114 245]/255, link_ends, joint_axis_vectors_R);
-view(ax, 0, 0);
+ax = draw_arm_gaussian(1, end_points, end_vectors, draw_end_as_vector, [66 114 245]/255, link_ends, joint_axis_vectors_R);
+%view(ax, 0, 0);

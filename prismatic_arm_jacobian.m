@@ -1,14 +1,16 @@
 % generates a cloud of approximate end positions when joint angles are uncertain
 
 % arm information
-links = 3;
-link_vectors = {[1 0 0]' [1 0 0]' [1 0 0]'};
-joint_axes = {'y' 'y' 'y'};
-joint_angles = {-pi/8 -pi/8 -pi/8};
+links = 2;
+link_vectors = {[1 0 0]' [1 0 0]'};
+joint_axes = {'y' 'z'};
+joint_angles = {-pi/2 0};
 % gaussian information
-joint_angle_sds = {pi/12 pi/12 pi/12};
-joint_length_sds = {1/12 1/12 1/12};
-num_samples = 10000;
+joint_angle_sds = {pi/12 pi/12};
+joint_length_sds = {1/12 1/12};
+num_samples = 1000;
+% output
+draw_end_as_vector = true;
 
 % create matrix to store angle, length deviations sampled from gaussian
 rng(7,'twister'); % repeatable seed
@@ -33,10 +35,13 @@ end
 
 % use jacobian to deviate end position
 end_points = zeros(3, num_samples);
+end_vectors = zeros(3, num_samples);
 for i = 1:num_samples
-    end_points(:,i) = link_ends(:,end) + J_aug * deviation_mat(:,i);
+    disp_vec = J_aug * deviation_mat(:,i);
+    end_points(:,i) = link_ends(:,end) + disp_vec;
+    end_vectors(:,i) = disp_vec;
 end
 
 % draw endpoints, arm, arm axes
-ax = draw_arm_gaussian(3, end_points, [66 114 245]/255, link_ends, joint_axis_vectors_R);
-view(ax, 0, 0);
+ax = draw_arm_gaussian(3, end_points, end_vectors, draw_end_as_vector, [66 114 245]/255, link_ends, joint_axis_vectors_R);
+%view(ax, 0, 0);

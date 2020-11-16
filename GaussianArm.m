@@ -79,7 +79,7 @@ classdef GaussianArm
             
             for s = 1:obj.num_samples
                 % generate cell array for robot_arm_endpoints
-                current_angles = cell(obj.num_links,1);
+                current_angles = cell(1, obj.num_links);
                 current_link_vectors = current_angles;
                 for j = 1:obj.num_links
                     current_angles{j} = obj.samples(j, s);
@@ -159,7 +159,7 @@ classdef GaussianArm
             end
         end
         
-        function ax = draw(obj, fig_num)
+        function [ax, fig] = draw(obj, fig_num)
             % plots arm with relevant information
             
             mustBeNonempty(obj.end_points)
@@ -168,9 +168,9 @@ classdef GaussianArm
             [~, link_ends, ~, ~, joint_axis_vectors_R] = link_jacobian(obj.link_vectors,...
                                                                        obj.joint_angles,...
                                                                        obj.joint_axes,...
-                                                                       1);
+                                                                       obj.num_links);
             % draw arm
-            ax = draw_arm_gaussian(fig_num,...
+            [ax, fig] = draw_arm_gaussian(fig_num,...
                                    obj.end_points,...
                                    [],...
                                    false,...
